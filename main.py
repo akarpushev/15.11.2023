@@ -1,27 +1,43 @@
-# This is a sample Python script.
+from telebot import types, telebot
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+bot = telebot.TeleBot("          ")
+
+db = {'ФИО': 'Карпушев Алексей', 'Адрес': 'ул. Ленина', 'Работа': 'ИФ'}
+
+@bot.message_handler(commands=["start"])
+def start(m, res=False):
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    item1 = types.KeyboardButtonPollType("ФИО")
+    item2 = types.KeyboardButtonPollType("Адрес")
+    item3 = types.KeyboardButtonPollType("Работа")
+
+    markup.add(item1)
+    markup.add(item2)
+    markup.add(item3)
+
+    bot.send_message(m.chat.id, f'Здравствуйте, что вас интересует?', reply_markup=markup)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+@bot.message_handler(content_types=["text"])
+
+def handle_text(message):
+    if message.text.strip() == 'ФИО':
+        answer = db['ФИО']
+    elif message.text.strip() == 'Адрес':
+        answer = db['Адрес']
+    elif message.text.strip() == 'Работа':
+        answer = db['Работа']
+    else:
+        answer = 'Такой команды нет'
+
+    bot.send_message(message.chat.id, answer)
+
+bot.polling(none_stop=True, interval=0)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
-
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+
 
